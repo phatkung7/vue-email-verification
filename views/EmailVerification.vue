@@ -65,7 +65,7 @@ export default {
     liff.init({ liffId: process.env.VUE_APP_LIFF_ID }, function () {});
   },
   async mounted() {
-    await this.checkLiffLogin();
+    //await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
@@ -120,12 +120,12 @@ export default {
         } else {
           // Handle the case where the API call was not successful
           console.error("User not found or other error occurred");
-          this.termsText = "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง.";
+          this.termsText = "เกิดข้อผิดพลาด : กรุณาลองอีกครั้ง.";
         }
       } catch (error) {
         // Handle the case where the API call fails
         console.error("Error posting data:", error);
-        this.termsText = "เกิดข้อผิดพลาดไม่พบอีเมล์ของท่านในระบบ.";
+        this.termsText = "เกิดข้อผิดพลาด : ไม่พบอีเมล์ของท่านในระบบ.";
       }
     },
     showTermsModal() {

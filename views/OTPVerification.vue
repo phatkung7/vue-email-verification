@@ -34,6 +34,8 @@
 import liff from "@line/liff";
 import axios from "axios";
 //import Swal from "sweetalert2";
+//const LINE_DDC_HOOK = process.env.LINE_DDC_HOOK
+const VUE_APP_API_KEY = process.env.VUE_APP_API_KEY
 export default {
   props: ["email"],
   data() {
@@ -46,7 +48,7 @@ export default {
     liff.init({ liffId: process.env.VUE_APP_LIFF_ID }, function () {});
   },
   async mounted() {
-    await this.checkLiffLogin();
+    //await this.checkLiffLogin();
     // Access the email parameter from the route
     //const email = this.$route.params.email;
     //console.log("Email received in /otp:", email);
@@ -59,54 +61,77 @@ export default {
         }
       });
     },
+    async SubmitUser(user_data) {
+      try {
+        // Make an API call using Axios
+        const response = await axios.post('your_api_endpoint', user_data);
+
+        // Handle the response as needed
+        console.log('API Response:', response.data);
+      } catch (error) {
+        // Handle errors
+        console.error('API Error:', error.message);
+        throw error; // Re-throw the error if needed
+      }
+    },
     async submitOTP() {
-      const idToken = await liff.getIDToken();
+      
+      //const idToken = await liff.getIDToken();
+      try {
+        await axios
+          .post(
+            'https://api.ddc.moph.go.th/api-helpdesk/verify-otp',
+            {
+              email: this.$route.params.email,
+              otp: this.otp,
+            },
+            {
+              headers: {
+                'x-api-key':VUE_APP_API_KEY,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+              if(response.data.status == 'success'){
+                console.log(response.data)
+              }else{
+                this.termsText = "เกิดข้อผิดพลาด: "+response.data.message;
+              }
+          });
+    } catch (error) {
+        // Handle the case where the API call fails
+        console.error("Error posting data:", error);
+        this.termsText = "เกิดข้อผิดพลาด: API Error";
+    }   
 
-      const api_verify_otp =
-        "https://e0d5-203-156-15-252.ngrok-free.app/webhook-ddc-helpdesk-51c5f/asia-northeast1/register-auth";
-      console.log("API URL:", api_verify_otp);
-      await axios({
-        method: "post",
-        url: api_verify_otp,
-        headers: {
-          Authorization: idToken,
-        },
-        data: {
-          email: this.$route.params.email,
-          otp: this.otp,
-        },
-      })
-        .then((response) => {
-          // handle success
-          console.log(response);
-          //alert("Message sent");
-          //liff.closeWindow();
-        })
-        .catch((error) => {
-          // handle errors
-          //alert("Error Message sent");
-          console.log(error);
-        });
+      // const api_verify_otp =
+      //   "https://e0d5-203-156-15-252.ngrok-free.app/webhook-ddc-helpdesk-51c5f/asia-northeast1/register-auth";
+      // console.log("API URL:", api_verify_otp);
+      // await axios({
+      //   method: "post",
+      //   url: api_verify_otp,
+      //   headers: {
+      //     Authorization: idToken,
+      //   },
+      //   data: {
+      //     email: this.$route.params.email,
+      //     otp: this.otp,
+      //   },
+      // })
+      //   .then((response) => {
+      //     // handle success
+      //     console.log(response);
+      //     //alert("Message sent");
+      //     //liff.closeWindow();
+      //   })
+      //   .catch((error) => {
+      //     // handle errors
+      //     //alert("Error Message sent");
+      //     console.log(error);
+      //   });
 
-      // try {
-      //   await axios
-      //     .post(
-      //       api_verify_otp,
-      //       {
-      //         email: this.$route.params.email,
-      //         otp: this.otp,
-      //       },
-      //       {
-      //         headers: {
-      //           // Your headers go here
-      //           Authorization: idToken,
-      //           // Add more headers as needed
-      //         },
-      //       }
-      //     )
-      //     .then((response) => {
-      //       console.log(response);
-      //     });
+      
 
       //console.log(response_verify_user.data.status);
       // Check if the status is success
@@ -137,7 +162,7 @@ export default {
       //const idToken = await liff.getIDToken();
       //   const getLiffemail = await liff.getDecodedIDToken().email;
       console.log("------ Start App Logs ----");
-      console.log("idToken", idToken);
+      //console.log("idToken", idToken);
       //   console.log("email", getLiffemail);
       console.log(`OTP ${this.$route.params.email} verified successfully`);
       // Call your backend API to verify the OTP
