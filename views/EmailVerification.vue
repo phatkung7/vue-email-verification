@@ -65,7 +65,7 @@ export default {
     liff.init({ liffId: process.env.VUE_APP_LIFF_ID }, function () {});
   },
   async mounted() {
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
