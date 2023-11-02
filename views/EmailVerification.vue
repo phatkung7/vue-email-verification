@@ -6,7 +6,7 @@
           <div class="card-body">
             <h2 class="card-title text-center mb-4">
               การลงทะเบียนใช้งาน
-              <p>Line DDC-Helpdesk</p>
+              <p>LINE DDC-Helpdesk</p>
             </h2>
             <form @submit.prevent="submitEmail">
               <div class="mb-3">
@@ -35,7 +35,7 @@
                   >.
                 </label>
               </div>
-              <button type="submit" class="btn btn-primary btn-block">
+              <button type="submit" class="btn btn-success btn-block">
                 Send Verification Code
               </button>
               <div class="text-center text-danger mt-3">
@@ -53,19 +53,24 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import liff from "@line/liff";
+const DDC_API = process.env.VUE_APP_DDC_API;
+const DDC_API_KEY = process.env.VUE_APP_API_KEY;
+const LIFF_ID = process.env.VUE_APP_LIFF_ID;
+const AGREEMENT_URL = process.env.VUE_APP_AGREEMENT_URL;
+console.log(DDC_API);
 export default {
   data() {
     return {
       email: "",
       termsText: "", // New data property for terms and conditions text
-      termsLink: process.env.VUE_APP_AGREEMENT_URL,
+      termsLink: AGREEMENT_URL,
     };
   },
   beforeCreate() {
-    liff.init({ liffId: process.env.VUE_APP_LIFF_ID }, function () {});
+    liff.init({ liffId: LIFF_ID }, function () {});
   },
   async mounted() {
-    await this.checkLiffLogin();
+    //await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
@@ -86,7 +91,7 @@ export default {
         return;
       }
       // Call your backend API to send the verification code to the email
-      const api_verify_user = process.env.VUE_APP_BASE_URL + "verify-sso-user";
+      const api_verify_user = DDC_API + "verify-sso-user";
       try {
         const response_verify_user = await axios.post(
           api_verify_user,
@@ -96,7 +101,7 @@ export default {
           {
             headers: {
               // Your headers go here
-              "x-api-key": process.env.VUE_APP_API_KEY,
+              "x-api-key": DDC_API_KEY,
               "Content-Type": "application/json",
               // Add more headers as needed
             },
@@ -125,7 +130,20 @@ export default {
       } catch (error) {
         // Handle the case where the API call fails
         console.error("Error posting data:", error);
-        this.termsText = "เกิดข้อผิดพลาด : ไม่พบอีเมล์ของท่านในระบบ.";
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่พบอีเมล์ของท่านในระบบ",
+          confirmButtonText: "ตกลง",
+          footer:
+            "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Reload the page
+            location.reload();
+          }
+        });
+        //this.termsText = "เกิดข้อผิดพลาด : ไม่พบอีเมล์ของท่านในระบบ.";
       }
     },
     showTermsModal() {
