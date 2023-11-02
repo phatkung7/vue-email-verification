@@ -3,7 +3,7 @@ FROM node:18 as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY . /app
 RUN npm run build
 
 # Stage 2: Use Nginx to serve the built Vue.js app
