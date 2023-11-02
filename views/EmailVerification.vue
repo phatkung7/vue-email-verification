@@ -57,7 +57,6 @@ const DDC_API = process.env.VUE_APP_DDC_API;
 const DDC_API_KEY = process.env.VUE_APP_API_KEY;
 const LIFF_ID = process.env.VUE_APP_LIFF_ID;
 const AGREEMENT_URL = process.env.VUE_APP_AGREEMENT_URL;
-console.log(DDC_API);
 export default {
   data() {
     return {
@@ -70,7 +69,7 @@ export default {
     liff.init({ liffId: LIFF_ID }, function () {});
   },
   async mounted() {
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
@@ -107,7 +106,6 @@ export default {
             },
           }
         );
-        //console.log(response_verify_user.data.status);
         // Check if the status is success
         if (response_verify_user.data.status === "success") {
           // This is where you'd typically make an API request to your server
