@@ -35,7 +35,7 @@ import liff from "@line/liff";
 import axios from "axios";
 //import Swal from "sweetalert2";
 //const LINE_DDC_HOOK = process.env.LINE_DDC_HOOK
-const VUE_APP_API_KEY = process.env.VUE_APP_API_KEY
+const VUE_APP_API_KEY = process.env.VUE_APP_API_KEY;
 export default {
   props: ["email"],
   data() {
@@ -61,49 +61,82 @@ export default {
         }
       });
     },
-    async SubmitUser(user_data) {
+    async SubmitUser(userData) {
+      const idToken = await liff.getIDToken();
       try {
         // Make an API call using Axios
-        const response = await axios.post('your_api_endpoint', user_data);
-
+        const response = await axios({
+          method: "post",
+          url: process.env.LINE_HOOK_REGISTER_OTP,
+          headers: {
+            Authorization: idToken,
+          },
+          data: {
+            email: userData.email,
+          },
+        });
         // Handle the response as needed
-        console.log('API Response:', response.data);
+        console.log("API Response:", response.data);
+        if (response.data.status === "success") {
+          //alert("Message sent");
+          //liff.closeWindow();
+          // if (
+          //   liff.getContext().type !== 'none' &&
+          //   liff.getContext().type !== 'external'
+          // ) {
+          //   await liff.sendMessages([
+          //     {
+          //       type: 'text',
+          //       text: 'This message was sent by sendMessages()',
+          //     },
+          //   ]);
+          console.log("----- Close Liff Here -----");
+        }
       } catch (error) {
         // Handle errors
-        console.error('API Error:', error.message);
-        throw error; // Re-throw the error if needed
+        console.error("API Error:", error.message);
+        //throw error; // Re-throw the error if needed
       }
     },
     async submitOTP() {
-      
-      //const idToken = await liff.getIDToken();
       try {
         await axios
           .post(
-            'https://api.ddc.moph.go.th/api-helpdesk/verify-otp',
+            "https://api.ddc.moph.go.th/api-helpdesk/verify-otp",
             {
               email: this.$route.params.email,
               otp: this.otp,
             },
             {
               headers: {
-                'x-api-key':VUE_APP_API_KEY,
+                "x-api-key": VUE_APP_API_KEY,
                 "Content-Type": "application/json",
               },
             }
           )
-          .then((response) => {
-              if(response.data.status == 'success'){
-                console.log(response.data)
-              }else{
-                this.termsText = "เกิดข้อผิดพลาด: "+response.data.message;
+          .then(async (response) => {
+            if (response.data.status == "success") {
+              console.log(response.data.email);
+              // Post Data To SubmitUser
+              try {
+                // Call the SubmitUser method with Axios
+                const requestData = {
+                  email: response.data.email,
+                };
+                await this.SubmitUser(requestData);
+                console.log("SubmitUser success");
+              } catch (error) {
+                console.error("SubmitUser error:", error);
               }
+            } else {
+              this.termsText = "เกิดข้อผิดพลาด: " + response.data.message;
+            }
           });
-    } catch (error) {
+      } catch (error) {
         // Handle the case where the API call fails
         console.error("Error posting data:", error);
         this.termsText = "เกิดข้อผิดพลาด: API Error";
-    }   
+      }
 
       // const api_verify_otp =
       //   "https://e0d5-203-156-15-252.ngrok-free.app/webhook-ddc-helpdesk-51c5f/asia-northeast1/register-auth";
@@ -130,8 +163,6 @@ export default {
       //     //alert("Error Message sent");
       //     console.log(error);
       //   });
-
-      
 
       //console.log(response_verify_user.data.status);
       // Check if the status is success
