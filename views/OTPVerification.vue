@@ -75,7 +75,7 @@ export default {
     liff.init({ liffId: LIFF_ID }, function () {});
   },
   async mounted() {
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
     this.$refs.otpInput[0].focus();
   },
   watch: {
@@ -138,19 +138,20 @@ export default {
         // Handle the response as needed
         console.log("API Response:", response.data);
         if (response.data) {
-          alert("Message sent");
+          //alert("Message sent");
           liff.closeWindow();
-          // if (
-          //   liff.getContext().type !== 'none' &&
-          //   liff.getContext().type !== 'external'
-          // ) {
-          //   await liff.sendMessages([
-          //     {
-          //       type: 'text',
-          //       text: 'This message was sent by sendMessages()',
-          //     },
-          //   ]);
-          console.log("----- Close Liff Here -----");
+          if (
+            liff.getContext().type !== "none" &&
+            liff.getContext().type !== "external"
+          ) {
+            await liff.sendMessages([
+              {
+                type: "text",
+                text: "This message was sent by sendMessages()",
+              },
+            ]);
+          }
+          //console.log("----- Close Liff Here -----");
         }
       } catch (error) {
         // Handle errors
@@ -177,7 +178,6 @@ export default {
           )
           .then(async (response) => {
             if (response.data.status == "success") {
-              //console.log("Log from DDC API:", response.data.data[0].email);
               // Check if response.data.data exists and has at least one element
               if (response.data.data && response.data.data.length > 0) {
                 // Post Data To SubmitUser
@@ -203,6 +203,11 @@ export default {
                 title: "เกิดข้อผิดพลาด",
                 text: response.data.message,
                 confirmButtonText: "ตกลง",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  // Reload the page
+                  location.reload();
+                }
               });
             }
           });
