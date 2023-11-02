@@ -48,7 +48,7 @@ export default {
     liff.init({ liffId: process.env.VUE_APP_LIFF_ID }, function () {});
   },
   async mounted() {
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
     // Access the email parameter from the route
     //const email = this.$route.params.email;
     //console.log("Email received in /otp:", email);
@@ -94,7 +94,7 @@ export default {
         }
       } catch (error) {
         // Handle errors
-        console.error("API Error:", error.message);
+        console.error("API Error on SubmitUser:", error.message);
         //throw error; // Re-throw the error if needed
       }
     },
