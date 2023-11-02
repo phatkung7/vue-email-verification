@@ -65,14 +65,19 @@ export default {
       const idToken = await liff.getIDToken();
       try {
         // Make an API call using Axios
+        console.log(
+          "LINE_HOOK_REGISTER_OTP:>>",
+          process.env.LINE_HOOK_REGISTER_OTP
+        );
         const response = await axios({
           method: "post",
-          url: process.env.LINE_HOOK_REGISTER_OTP,
+          url: "https://e0d5-203-156-15-252.ngrok-free.app/webhook-ddc-helpdesk-51c5f/asia-northeast1/register-auth",
           headers: {
             Authorization: idToken,
           },
           data: {
             email: userData.email,
+            otp: userData.otp,
           },
         });
         // Handle the response as needed
@@ -116,12 +121,13 @@ export default {
           )
           .then(async (response) => {
             if (response.data.status == "success") {
-              console.log(response.data.email);
+              console.log("Log from DDC API:", response.data.data[0].email);
               // Post Data To SubmitUser
               try {
                 // Call the SubmitUser method with Axios
                 const requestData = {
-                  email: response.data.email,
+                  email: response.data.data[0].email,
+                  otp: this.otp,
                 };
                 await this.SubmitUser(requestData);
                 console.log("SubmitUser success");
