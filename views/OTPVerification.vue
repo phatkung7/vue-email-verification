@@ -63,12 +63,15 @@ export default {
     },
     async SubmitUser(userData) {
       const idToken = await liff.getIDToken();
+      console.log('-----idToken----');
+      console.log(idToken);
+      console.log('---------');
+      console.log('-----userData----');
+      console.log(userData.email);
+      console.log(userData.otp);
+      console.log('---------');
       try {
         // Make an API call using Axios
-        console.log(
-          "LINE_HOOK_REGISTER_OTP:>>",
-          process.env.LINE_HOOK_REGISTER_OTP
-        );
         const response = await axios({
           method: "post",
           url: "https://e0d5-203-156-15-252.ngrok-free.app/webhook-ddc-helpdesk-51c5f/asia-northeast1/register-auth",
@@ -82,9 +85,9 @@ export default {
         });
         // Handle the response as needed
         console.log("API Response:", response.data);
-        if (response.data.status === "success") {
-          //alert("Message sent");
-          //liff.closeWindow();
+        if (response.data) {
+          alert("Message sent");
+          liff.closeWindow();
           // if (
           //   liff.getContext().type !== 'none' &&
           //   liff.getContext().type !== 'external'
@@ -127,8 +130,9 @@ export default {
                 // Call the SubmitUser method with Axios
                 const requestData = {
                   email: response.data.data[0].email,
-                  otp: this.otp,
+                  otp: response.data.data[0].otp_code,
                 };
+                console.log(requestData);
                 await this.SubmitUser(requestData);
                 console.log("SubmitUser success");
               } catch (error) {
@@ -198,15 +202,15 @@ export default {
 
       //const idToken = await liff.getIDToken();
       //   const getLiffemail = await liff.getDecodedIDToken().email;
-      console.log("------ Start App Logs ----");
+      //console.log("------ Start App Logs ----");
       //console.log("idToken", idToken);
       //   console.log("email", getLiffemail);
-      console.log(`OTP ${this.$route.params.email} verified successfully`);
+      //console.log(`OTP ${this.$route.params.email} verified successfully`);
       // Call your backend API to verify the OTP
       // This is where you'd typically make an API request to your server
-      console.log(`OTP ${this.otp} verified successfully`);
+      //console.log(`OTP ${this.otp} verified successfully`);
       // Handle success or failure accordingly
-      console.log("------ End App Logs ----");
+      //console.log("------ End App Logs ----");
     },
   },
 };
