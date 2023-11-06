@@ -123,91 +123,49 @@ export default {
       // console.log(userData.otp);
       // console.log("---------");
       //try {
-        // Make an API call using Axios
-        await axios({
-          method: "post",
-          url: LINE_HOOK_REGISTER_OTP,
-          headers: {
-            Authorization: idToken,
-          },
-          data: {
-            email: userData.email,
-            otp: userData.otp,
-          },
-        }).then(async (response) => {
+      // Make an API call using Axios
+      await axios({
+        method: "post",
+        url: LINE_HOOK_REGISTER_OTP,
+        headers: {
+          Authorization: idToken,
+        },
+        data: {
+          email: userData.email,
+          otp: userData.otp,
+        },
+      })
+        .then(async (response) => {
           // Handle the response as needed
-          console.log("===========API Response=======");
-          console.log(response.status);
-          console.log(response.data);
-          if(response.status == 200){
-          //   Swal.fire({
-          //   icon: "success",
-          //   title: "สำเร็จ!",
-          //   text: "ลงทะเบียนใช้งานสำเร็จ",
-          //   confirmButtonText: "ตกลง",
-          // });
-          Swal.fire({
-            icon: "success",
-            title: "สำเร็จ!",
-            text: "ลงทะเบียนใช้งานสำเร็จ",
-            confirmButtonText: "ตกลง",
-          footer:
-            "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            if (
-            liff.getContext().type !== "none" &&
-            liff.getContext().type !== "external"
-          ) {
-            await liff.sendMessages([
-              {
-                type: "text",
-                text: "This message was sent by sendMessages()",
-              },
-            ]);
+          if (response.status == 200) {
+            Swal.fire({
+              icon: "success",
+              title: "สำเร็จ!",
+              text: "ลงทะเบียนใช้งานสำเร็จ",
+              confirmButtonText: "ตกลง",
+              footer:
+                "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                if (
+                  liff.getContext().type !== "none" &&
+                  liff.getContext().type !== "external"
+                ) {
+                  await liff.sendMessages([
+                    {
+                      type: "text",
+                      text: "This message was sent by sendMessages()",
+                    },
+                  ]);
+                  await liff.closeWindow();
+                }
+              }
+            });
           }
-          }
-          //alert('Message Sent!!');
-          await liff.closeWindow();
-          }
-        });
-              
-        }).catch(error => {
-          console.log("Error>>>>>>>>>>>>>",error.response.data.mesage);
         })
-
-        
-        // if (response.data) {
-        //   //alert("Message sent");
-        //   if (
-        //     liff.getContext().type !== "none" &&
-        //     liff.getContext().type !== "external"
-        //   ) {
-        //     await liff.sendMessages([
-        //       {
-        //         type: "text",
-        //         text: "This message was sent by sendMessages()",
-        //       },
-        //     ]);
-        //   }
-        //   liff.closeWindow();
-        //   //console.log("----- Close Liff Here -----");
-        // }
-      //} catch (error) {
-        // Handle errors
-        // console.error("API Error on SubmitUser:", error.response.data.mesage);
-        // Swal.fire({
-        //         icon: "error",
-        //         title: "เกิดข้อผิดพลาด",
-        //         text: error.response.data.mesage,
-        //         confirmButtonText: "ตกลง",
-        //       }).then((result) => {
-        //         if (result.isConfirmed) {
-        //           // Reload the page
-        //           location.reload();
-        //         }
-        //       });
-      //}
+        .catch((error) => {
+          console.log("Error>>>>>>>>>>>>>", error.response.data.mesage);
+        });
     },
     async submitOTP() {
       const enteredOTP = this.otpArray.join("");
