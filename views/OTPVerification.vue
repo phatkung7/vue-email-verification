@@ -146,7 +146,16 @@ export default {
           //   text: "ลงทะเบียนใช้งานสำเร็จ",
           //   confirmButtonText: "ตกลง",
           // });
-              if (
+          Swal.fire({
+            icon: "success",
+            title: "สำเร็จ!",
+            text: "ลงทะเบียนใช้งานสำเร็จ",
+            confirmButtonText: "ตกลง",
+          footer:
+            "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (
             liff.getContext().type !== "none" &&
             liff.getContext().type !== "external"
           ) {
@@ -158,8 +167,11 @@ export default {
             ]);
           }
           }
-          alert('Message Sent!!');
+          //alert('Message Sent!!');
           await liff.closeWindow();
+          }
+        });
+              
         }).catch(error => {
           console.log("Error>>>>>>>>>>>>>",error.response.data.mesage);
         })
