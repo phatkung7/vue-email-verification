@@ -10,8 +10,8 @@ RUN npm run build
 FROM nginx:1.21-alpine
 
 # Copy SSL certificates to the container
-COPY ./ssl/star_ddc_moph_go_th.crt /etc/nginx/star_ddc_moph_go_th.crt
-#COPY ./ssl/cert_bundle.crt /etc/nginx/cert_bundle.crt
+#COPY ./ssl/star_ddc_moph_go_th.crt /etc/nginx/star_ddc_moph_go_th.crt
+COPY ./ssl/cert_bundle.crt /etc/nginx/cert_bundle.crt
 COPY ./ssl/star_ddc_moph_go_th.key /etc/nginx/star_ddc_moph_go_th.key
 
 # Copy Nginx configuration with SSL
