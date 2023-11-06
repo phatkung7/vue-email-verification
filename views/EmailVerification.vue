@@ -35,7 +35,7 @@
                   >.
                 </label>
               </div>
-              <button type="submit" class="btn btn-success btn-block">
+              <button type="submit" class="btn btn-success btn-block mx-auto">
                 Send Verification Code
               </button>
               <div class="text-center text-danger mt-3">
@@ -69,7 +69,7 @@ export default {
     liff.init({ liffId: LIFF_ID }, function () {});
   },
   async mounted() {
-    await this.checkLiffLogin();
+    //await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
