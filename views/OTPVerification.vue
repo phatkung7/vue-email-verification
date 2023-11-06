@@ -94,7 +94,7 @@ export default {
       // Sanitize input to allow only integers
       this.otpArray[index] = this.otpArray[index].replace(/\D/g, "");
       // Handle input logic if needed
-      console.log(index);
+      //console.log(index);
       if (index < 5 && this.otpArray[index] !== "") {
         // Move to the next input box
         this.$refs.otpInput[index + 1].focus();
@@ -115,16 +115,16 @@ export default {
     },
     async SubmitUser(userData) {
       const idToken = await liff.getIDToken();
-      console.log("-----idToken----");
-      console.log(idToken);
-      console.log("---------");
-      console.log("-----userData----");
-      console.log(userData.email);
-      console.log(userData.otp);
-      console.log("---------");
-      try {
+      // console.log("-----idToken----");
+      // console.log(idToken);
+      // console.log("---------");
+      // console.log("-----userData----");
+      // console.log(userData.email);
+      // console.log(userData.otp);
+      // console.log("---------");
+      //try {
         // Make an API call using Axios
-        const response = await axios({
+        await axios({
           method: "post",
           url: LINE_HOOK_REGISTER_OTP,
           headers: {
@@ -134,12 +134,19 @@ export default {
             email: userData.email,
             otp: userData.otp,
           },
-        });
-        // Handle the response as needed
-        console.log("API Response:", response.data);
-        if (response.data) {
-          //alert("Message sent");
-          if (
+        }).then(async (response) => {
+          // Handle the response as needed
+          console.log("===========API Response=======");
+          console.log(response.status);
+          console.log(response.data);
+          if(response.status == 200){
+          //   Swal.fire({
+          //   icon: "success",
+          //   title: "สำเร็จ!",
+          //   text: "ลงทะเบียนใช้งานสำเร็จ",
+          //   confirmButtonText: "ตกลง",
+          // });
+              if (
             liff.getContext().type !== "none" &&
             liff.getContext().type !== "external"
           ) {
@@ -150,14 +157,45 @@ export default {
               },
             ]);
           }
-          liff.closeWindow();
-          //console.log("----- Close Liff Here -----");
-        }
-      } catch (error) {
+          }
+          alert('Message Sent!!');
+          await liff.closeWindow();
+        }).catch(error => {
+          console.log("Error>>>>>>>>>>>>>",error.response.data.mesage);
+        })
+
+        
+        // if (response.data) {
+        //   //alert("Message sent");
+        //   if (
+        //     liff.getContext().type !== "none" &&
+        //     liff.getContext().type !== "external"
+        //   ) {
+        //     await liff.sendMessages([
+        //       {
+        //         type: "text",
+        //         text: "This message was sent by sendMessages()",
+        //       },
+        //     ]);
+        //   }
+        //   liff.closeWindow();
+        //   //console.log("----- Close Liff Here -----");
+        // }
+      //} catch (error) {
         // Handle errors
-        console.error("API Error on SubmitUser:", error.message);
-        //throw error; // Re-throw the error if needed
-      }
+        // console.error("API Error on SubmitUser:", error.response.data.mesage);
+        // Swal.fire({
+        //         icon: "error",
+        //         title: "เกิดข้อผิดพลาด",
+        //         text: error.response.data.mesage,
+        //         confirmButtonText: "ตกลง",
+        //       }).then((result) => {
+        //         if (result.isConfirmed) {
+        //           // Reload the page
+        //           location.reload();
+        //         }
+        //       });
+      //}
     },
     async submitOTP() {
       const enteredOTP = this.otpArray.join("");
@@ -189,7 +227,7 @@ export default {
                   };
                   //console.log(requestData);
                   await this.SubmitUser(requestData);
-                  console.log("SubmitUser success");
+                  //console.log("SubmitUser success");
                 } catch (error) {
                   console.error("SubmitUser error:", error);
                 }
