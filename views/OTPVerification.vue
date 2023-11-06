@@ -139,7 +139,6 @@ export default {
         console.log("API Response:", response.data);
         if (response.data) {
           //alert("Message sent");
-          liff.closeWindow();
           if (
             liff.getContext().type !== "none" &&
             liff.getContext().type !== "external"
@@ -151,6 +150,7 @@ export default {
               },
             ]);
           }
+          liff.closeWindow();
           //console.log("----- Close Liff Here -----");
         }
       } catch (error) {
