@@ -20,7 +20,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 # Copy the built Vue.js app
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Copy node_modules for Bootstrap
-COPY --from=build-stage /app/node_modules /usr/share/nginx/html/node_modules
+#COPY --from=build-stage /app/node_modules /usr/share/nginx/html/node_modules
 
 EXPOSE 80
 EXPOSE 443
