@@ -31,10 +31,17 @@
                   />
                 </div>
               </div>
+              <!-- Loading Spinner -->
+              <div v-if="isLoading" class="text-center mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">กำลังประมวลผล...</span>
+                </div>
+                <div>กำลังประมวลผล...</div>
+              </div>
               <button
                 type="submit"
                 class="btn btn-primary btn-block mt-4"
-                :disabled="isInputIncomplete"
+                :disabled="isInputIncomplete || isLoading"
               >
                 Verify OTP
               </button>
@@ -64,6 +71,7 @@ export default {
       otp: "",
       termsText: "",
       otpArray: ["", "", "", "", "", ""],
+      isLoading: false, // New property to track loading state
     };
   },
   computed: {
@@ -83,7 +91,7 @@ export default {
       handler() {
         if (!this.isInputIncomplete && this.$refs.otpForm) {
           // Auto-submit the form when OTP is complete and form reference is available
-          this.submitOTP();
+          //this.submitOTP();
         }
       },
       deep: true,
@@ -114,58 +122,58 @@ export default {
       });
     },
     async SubmitUser(userData) {
+      this.isLoading = true; // Set loading state to true
       const idToken = await liff.getIDToken();
-      // console.log("-----idToken----");
-      // console.log(idToken);
-      // console.log("---------");
-      // console.log("-----userData----");
-      // console.log(userData.email);
-      // console.log(userData.otp);
-      // console.log("---------");
-      //try {
-      // Make an API call using Axios
-      await axios({
-        method: "post",
-        url: LINE_HOOK_REGISTER_OTP,
-        headers: {
-          Authorization: idToken,
-        },
-        data: {
-          email: userData.email,
-          otp: userData.otp,
-        },
-      })
-        .then(async (response) => {
-          // Handle the response as needed
-          if (response.status == 200) {
-            Swal.fire({
-              icon: "success",
-              title: "สำเร็จ!",
-              text: "ลงทะเบียนใช้งานสำเร็จ",
-              confirmButtonText: "ตกลง",
-              footer:
-                "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
-            }).then(async (result) => {
-              if (result.isConfirmed) {
-                if (
-                  liff.getContext().type !== "none" &&
-                  liff.getContext().type !== "external"
-                ) {
-                  await liff.sendMessages([
-                    {
-                      type: "text",
-                      text: "This message was sent by sendMessages()",
-                    },
-                  ]);
-                  await liff.closeWindow();
-                }
-              }
-            });
+
+      try {
+        // Make an API call using Axios
+        const response = await axios.post(
+          LINE_HOOK_REGISTER_OTP,
+          {
+            email: userData.email,
+            otp: userData.otp,
+          },
+          {
+            headers: {
+              Authorization: idToken,
+            },
           }
-        })
-        .catch((error) => {
-          console.log("Error>>>>>>>>>>>>>", error.response.data.mesage);
+        );
+
+        if (response.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "สำเร็จ!",
+            text: "ลงทะเบียนใช้งานสำเร็จ",
+            confirmButtonText: "ตกลง",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
+                await liff.sendMessages([
+                  {
+                    type: "text",
+                    text: "This message was sent by sendMessages()",
+                  },
+                ]);
+                await liff.closeWindow();
+              }
+            }
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: error.response?.data?.message || "An error occurred",
+          confirmButtonText: "ตกลง",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            liff.closeWindow();
+          }
         });
+      } finally {
+        this.isLoading = false; // Set loading state to false after completion
+      }
     },
     async submitOTP() {
       const enteredOTP = this.otpArray.join("");
