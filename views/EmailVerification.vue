@@ -35,6 +35,13 @@
                   >.
                 </label>
               </div>
+              <!-- Loading Spinner -->
+              <div v-if="isLoading" class="text-center mt-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">กำลังประมวลผล...</span>
+                </div>
+                <div>กำลังประมวลผล...</div>
+              </div>
               <button type="submit" class="btn btn-success btn-block mx-auto">
                 Send Verification Code
               </button>
@@ -63,6 +70,7 @@ export default {
       email: "",
       termsText: "", // New data property for terms and conditions text
       termsLink: AGREEMENT_URL,
+      isLoading: false, // New property to track loading state
     };
   },
   beforeCreate() {
@@ -80,6 +88,7 @@ export default {
       });
     },
     async submitEmail() {
+      this.isLoading = true; // Set loading state to true
       // Check if the checkbox is checked
       const isAgreed = document.getElementById("agreeCheckbox").checked;
 
@@ -142,6 +151,8 @@ export default {
           }
         });
         //this.termsText = "เกิดข้อผิดพลาด : ไม่พบอีเมล์ของท่านในระบบ.";
+      } finally {
+        this.isLoading = false; // Set loading state to false after completion
       }
     },
     showTermsModal() {
