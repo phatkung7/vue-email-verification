@@ -149,12 +149,12 @@ export default {
           }).then(async (result) => {
             if (result.isConfirmed) {
               if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
-                await liff.sendMessages([
-                  {
-                    type: "text",
-                    text: "This message was sent by sendMessages()",
-                  },
-                ]);
+                // await liff.sendMessages([
+                //   {
+                //     type: "text",
+                //     text: "This message was sent by sendMessages()",
+                //   },
+                // ]);
                 await liff.closeWindow();
               }
             }

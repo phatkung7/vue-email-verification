@@ -132,7 +132,7 @@ export default {
       formData.append("file", this.selectedFile);
 
       // Adjust the URL based on your API endpoint for file upload
-      const apiUrl = process.env.VUE_APP_DDC_API + "insert-ticket";
+      const apiUrl = process.env.VUE_APP_DDC_API + "tickets";
       const api_key = process.env.VUE_APP_API_KEY;
 
       axios
