@@ -148,7 +148,10 @@ export default {
             confirmButtonText: "ตกลง",
           }).then(async (result) => {
             if (result.isConfirmed) {
-              if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
+              if (
+                liff.getContext().type !== "none" &&
+                liff.getContext().type !== "external"
+              ) {
                 // await liff.sendMessages([
                 //   {
                 //     type: "text",
@@ -161,16 +164,17 @@ export default {
           });
         }
       } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "เกิดข้อผิดพลาด",
-          text: error.response?.data?.message || "An error occurred",
-          confirmButtonText: "ตกลง",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            liff.closeWindow();
-          }
-        });
+        console.log(error);
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "เกิดข้อผิดพลาด",
+        //   text: error.response?.data?.message || "An error occurred",
+        //   confirmButtonText: "ตกลง",
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     liff.closeWindow();
+        //   }
+        // });
       } finally {
         this.isLoading = false; // Set loading state to false after completion
       }
