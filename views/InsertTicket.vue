@@ -4,10 +4,12 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">การแจ้งปัญหาการใช้งานระบบ</h5>
+            <h4 class="card-title">การแจ้งปัญหาการใช้งานระบบ</h4>
             <form @submit.prevent="insertTicket">
-            <div class="form-group mt-3 mb-3">
-                <label class="control-label" for="systemType">ชื่อระบบ</label>
+              <div class="form-group mt-3 mb-3">
+                <label style="text-align: left" for="systemType"
+                  >ชื่อระบบ</label
+                >
                 <select
                   v-model="selectedSystemType"
                   id="systemType"
@@ -23,6 +25,25 @@
                 </select>
               </div>
               <div class="form-group mt-3 mb-3">
+                <label class="control-label" for="fileUpload"
+                  >อัพโหลดไฟล์ภาพ</label
+                >
+                <input
+                  type="file"
+                  id="fileUpload"
+                  class="form-control"
+                  @change="handleFileUpload"
+                  accept=".jpg, .jpeg, .png, .gif"
+                />
+                <small class="text-muted">
+                  รองรับไฟล์รูปภาพ: JPEG, JPG, PNG, GIF
+                </small>
+                <small class="text-muted">
+                  ขนาดไฟล์สูงสุด:
+                  {{ (maxFileSize / (1024 * 1024)).toFixed(2) }} MB
+                </small>
+              </div>
+              <div class="form-group mt-3 mb-3">
                 <label for="description">ปัญหาที่พบ</label>
                 <textarea
                   v-model="description"
@@ -32,7 +53,7 @@
                   required
                   @input="updateCharacterCount"
                   :maxlength="maxCharacterCount"
-                  style="height: 150px;"
+                  style="height: 150px"
                 ></textarea>
                 <small class="text-muted"
                   >Character count: {{ characterCount }}/{{
@@ -40,9 +61,7 @@
                   }}</small
                 >
               </div>
-              <button type="submit" class="btn btn-warning">
-                แจ้งปัญหา
-              </button>
+              <button type="submit" class="btn btn-warning">แจ้งปัญหา</button>
             </form>
           </div>
         </div>
@@ -63,7 +82,9 @@ export default {
       selectedSystemType: null,
       systemTypes: [], // Array to hold the fetched system types
       characterCount: 0,
-      maxCharacterCount: 300, // You can adjust the maximum character count
+      maxCharacterCount: 500, // You can adjust the maximum character count
+      selectedFile: null,
+      maxFileSize: 5 * 1024 * 1024, // 5 MB (adjust as needed)
     };
   },
   mounted() {
@@ -72,11 +93,17 @@ export default {
   },
   methods: {
     async fetchSystemTypes() {
-      const apiUrl = process.env.VUE_APP_BASE_URL+'list-system-types';
+      const apiUrl = process.env.VUE_APP_DDC_API + "list-system-types";
+      const api_key = process.env.VUE_APP_API_KEY;
       try {
         // Adjust the URL based on your API endpoint
-        const response = await axios.get(apiUrl);
-        this.systemTypes = response.data;
+        const response = await axios.get(apiUrl, {
+          headers: {
+            "x-api-key": api_key,
+          },
+        });
+        console.log(response);
+        this.systemTypes = response.data.data;
         // Preselect the first option
         if (this.systemTypes.length > 0) {
           this.selectedSystemType = this.systemTypes[0].id;
@@ -97,7 +124,32 @@ export default {
         "System Type Name:",
         selectedSystemType ? selectedSystemType.text : ""
       );
+
       // You can perform an API call or other logic here to insert the ticket
+      const formData = new FormData();
+      formData.append("description", this.description);
+      formData.append("systemTypeId", this.selectedSystemType);
+      formData.append("file", this.selectedFile);
+
+      // Adjust the URL based on your API endpoint for file upload
+      const apiUrl = process.env.VUE_APP_DDC_API + "insert-ticket";
+      const api_key = process.env.VUE_APP_API_KEY;
+
+      axios
+        .post(apiUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-api-key": api_key,
+          },
+        })
+        .then((response) => {
+          console.log("Ticket inserted successfully:", response.data);
+          // Add any additional logic or handling here
+        })
+        .catch((error) => {
+          console.error("Error inserting ticket:", error);
+          // Handle errors appropriately
+        });
     },
     updateCharacterCount() {
       if (this.description.length > this.maxCharacterCount) {
@@ -109,6 +161,36 @@ export default {
       }
       this.characterCount = this.description.length;
     },
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!this.isValidFileType(file)) {
+          alert("รองรับเฉพาะไฟล์รูปภาพ: JPEG, JPG, PNG, GIF");
+          event.target.value = null; // Clear the file input
+          return;
+        }
+
+        if (!this.isValidFileSize(file)) {
+          alert(`ขนาดไฟล์เกิน ${this.maxFileSize / 1024} KB`);
+          event.target.value = null; // Clear the file input
+          return;
+        }
+
+        this.selectedFile = file;
+      }
+    },
+    isValidFileType(file) {
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+      ];
+      return allowedTypes.includes(file.type);
+    },
+    isValidFileSize(file) {
+      return file.size <= this.maxFileSize;
+    },
   },
 };
 </script>
@@ -118,12 +200,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .card {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box-shadow for a subtle shadow effect */
 }
 
 .btn-primary {
@@ -144,5 +226,4 @@ a {
 a:hover {
   color: #0056b3;
 }
-
 </style>
