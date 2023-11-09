@@ -20,7 +20,7 @@
                   <input
                     ref="otpInput"
                     v-model="otpArray[index]"
-                    type="text"
+                    inputmode="numeric" 
                     class="form-control text-center"
                     required
                     pattern="\d"
@@ -124,7 +124,10 @@ export default {
     async SubmitUser(userData) {
       this.isLoading = true; // Set loading state to true
       const idToken = await liff.getIDToken();
-
+      console.log('<<<<<<<<<<<<<<<<idToken>>>>>>>>>>>>>>>>>>>');
+      console.log(idToken);
+      console.log('<<<<<<<<<<<<<<<< userData >>>>>>>>>>>>>>>>>>>');
+      console.log(userData);
       try {
         // Make an API call using Axios
         const response = await axios.post(
@@ -135,7 +138,7 @@ export default {
           },
           {
             headers: {
-              Authorization: idToken,
+              'Authorization': idToken,
             },
           }
         );
@@ -165,16 +168,17 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        // Swal.fire({
-        //   icon: "error",
-        //   title: "เกิดข้อผิดพลาด",
-        //   text: error.response?.data?.message || "An error occurred",
-        //   confirmButtonText: "ตกลง",
-        // }).then((result) => {
-        //   if (result.isConfirmed) {
-        //     liff.closeWindow();
-        //   }
-        // });
+        console.log(error.response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: error.response.data.message || "An error occurred",
+          confirmButtonText: "ตกลง",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            liff.closeWindow();
+          }
+        });
       } finally {
         this.isLoading = false; // Set loading state to false after completion
       }
@@ -207,7 +211,8 @@ export default {
                     email: response.data.data[0].email,
                     otp: response.data.data[0].otp_code,
                   };
-                  //console.log(requestData);
+                  console.log('-------- Verify OK ------');
+                  console.log(requestData);
                   await this.SubmitUser(requestData);
                   //console.log("SubmitUser success");
                 } catch (error) {
