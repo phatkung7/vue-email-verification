@@ -16,9 +16,10 @@ COPY ./ssl/star_ddc_moph_go_th.key /etc/nginx/star_ddc_moph_go_th.key
 
 # Copy Nginx configuration with SSL
 COPY ./nginx.conf /etc/nginx/nginx.conf
-
-# Copy the built Vue.js app
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Copy blank.html to the root of the Nginx HTML directory
+COPY --from=build-stage /app/blank.html /usr/share/nginx/html/blank.html
+# Copy the helpdesk-app
+COPY --from=build-stage /app/dist/ /usr/share/nginx/html/helpdesk-app
 # Copy node_modules for Bootstrap
 #COPY --from=build-stage /app/node_modules /usr/share/nginx/html/node_modules
 
