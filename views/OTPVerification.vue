@@ -124,12 +124,12 @@ export default {
     async SubmitUser(userData) {
       this.isLoading = true; // Set loading state to true
       const idToken = await liff.getIDToken();
-      console.log("<<<<<<<<<<<<<<<<idToken>>>>>>>>>>>>>>>>>>>");
-      console.log(idToken);
-      console.log("<<<<<<<<<<<<<<<< userData >>>>>>>>>>>>>>>>>>>");
-      console.log(userData);
-      console.log('>>>>>>>>>>>>>> LINE_HOOK_REGISTER_OTP <<<<<<<<<<<<');
-      console.log(LINE_HOOK_REGISTER_OTP);
+      // console.log("<<<<<<<<<<<<<<<<idToken>>>>>>>>>>>>>>>>>>>");
+      // console.log(idToken);
+      // console.log("<<<<<<<<<<<<<<<< userData >>>>>>>>>>>>>>>>>>>");
+      // console.log(userData);
+      // console.log('>>>>>>>>>>>>>> LINE_HOOK_REGISTER_OTP <<<<<<<<<<<<');
+      // console.log(LINE_HOOK_REGISTER_OTP);
       try {
         // Make an API call using Axios
         const response = await axios.post(
@@ -215,12 +215,12 @@ export default {
                     email: response.data.data[0].email,
                     otp: response.data.data[0].otp_code,
                   };
-                  console.log("-------- Verify OK ------");
-                  console.log(requestData);
+                  // console.log("-------- Verify OK ------");
+                  // console.log(requestData);
                   await this.SubmitUser(requestData);
                   //console.log("SubmitUser success");
                 } catch (error) {
-                  console.error("SubmitUser error:", error);
+                  //console.error("SubmitUser error:", error);
                 }
               } else {
                 this.termsText = "No data received from DDC API";
@@ -242,7 +242,7 @@ export default {
           });
       } catch (error) {
         // Handle the case where the API call fails
-        console.error("Error posting data:", error);
+        //console.error("Error posting data:", error);
         this.termsText = "เกิดข้อผิดพลาด: API Error";
       }
     },
