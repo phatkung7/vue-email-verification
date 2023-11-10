@@ -77,7 +77,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      title: "",
       description: "",
       selectedSystemType: null,
       systemTypes: [], // Array to hold the fetched system types
