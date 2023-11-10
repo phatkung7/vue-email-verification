@@ -10,7 +10,7 @@ const routes = [
     component: OTPVerification,
     props: true,
   },
-  { path: "/ticket", component: InsertTicket },
+  { path: "/req-ticket", component: InsertTicket },
 ];
 
 const router = createRouter({
