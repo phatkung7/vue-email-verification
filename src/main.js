@@ -4,11 +4,11 @@ import router from "../router";
 
 import "bootstrap/dist/css/bootstrap.css";
 
+// Initialize vConsole
+var vConsole = new window.VConsole();
 // Your vConsole hide code
-if (process.env.VUE_APP_ENV === "production") {
-  if (window.vConsole) {
-    window.vConsole.hideSwitch();
-  }
+if (process.env.NODE_ENV === "production" && vConsole) {
+  vConsole.hideSwitch();
 }
 
 createApp(App).use(router).mount("#app");
