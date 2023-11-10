@@ -143,7 +143,7 @@ export default {
           text: "ไม่พบอีเมล์ของท่านในระบบ",
           confirmButtonText: "ตกลง",
           footer:
-            "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
+            "กรุณาติดต่อ <font color='green'><b>02-590-3928</b><br><b>หรือผ่านทางช่องแชท @ddc.helpdesk</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
         }).then((result) => {
           if (result.isConfirmed) {
             // Reload the page
