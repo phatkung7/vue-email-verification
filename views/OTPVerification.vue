@@ -124,10 +124,10 @@ export default {
     async SubmitUser(userData) {
       this.isLoading = true; // Set loading state to true
       const idToken = await liff.getIDToken();
-      console.log("<<<<<<<<<<<<<<<<idToken>>>>>>>>>>>>>>>>>>>");
-      console.log(idToken);
-      console.log("<<<<<<<<<<<<<<<< userData >>>>>>>>>>>>>>>>>>>");
-      console.log(userData);
+      // console.log("<<<<<<<<<<<<<<<<idToken>>>>>>>>>>>>>>>>>>>");
+      // console.log(idToken);
+      // console.log("<<<<<<<<<<<<<<<< userData >>>>>>>>>>>>>>>>>>>");
+      // console.log(userData);
       try {
         // Make an API call using Axios
         const response = await axios.post(
@@ -211,8 +211,8 @@ export default {
                     email: response.data.data[0].email,
                     otp: response.data.data[0].otp_code,
                   };
-                  console.log("-------- Verify OK ------");
-                  console.log(requestData);
+                  // console.log("-------- Verify OK ------");
+                  // console.log(requestData);
                   await this.SubmitUser(requestData);
                   //console.log("SubmitUser success");
                 } catch (error) {
