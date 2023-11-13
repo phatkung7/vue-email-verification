@@ -71,9 +71,9 @@
 </template>
 
 <script>
-//import liff from '@line/liff';
+import liff from '@line/liff';
 import axios from "axios";
-
+const LIFF_ID = process.env.VUE_APP_LIFF_ID;
 export default {
   data() {
     return {
@@ -86,11 +86,22 @@ export default {
       maxFileSize: 5 * 1024 * 1024, // 5 MB (adjust as needed)
     };
   },
-  mounted() {
+  beforeCreate() {
+    liff.init({ liffId: LIFF_ID }, function () {});
+  },
+  async mounted() {
     // Fetch categories and system types when the component is mounted
-    this.fetchSystemTypes();
+    await this.fetchSystemTypes();
+    await this.checkLiffLogin();
   },
   methods: {
+    async checkLiffLogin() {
+      await liff.ready.then(async () => {
+        if (!liff.isLoggedIn()) {
+          liff.login({ redirectUri: window.location });
+        }
+      });
+    },
     async fetchSystemTypes() {
       const apiUrl = process.env.VUE_APP_DDC_API + "list-system-types";
       const api_key = process.env.VUE_APP_API_KEY;
@@ -111,7 +122,12 @@ export default {
         console.error("Error fetching system types:", error);
       }
     },
-    insertTicket() {
+    async insertTicket() {
+      //init Line Liff
+      const idToken = await liff.getIDToken();
+      console.log('--------- idToken -----------');
+      console.log(idToken);
+      console.log('-----------------------------');
       // Implement logic to insert the ticket
       // For simplicity, let's log the data for now
       console.log("Description:", this.description);
@@ -126,19 +142,19 @@ export default {
 
       // You can perform an API call or other logic here to insert the ticket
       const formData = new FormData();
-      formData.append("description", this.description);
       formData.append("systemTypeId", this.selectedSystemType);
-      formData.append("file", this.selectedFile);
-
+      formData.append("files", this.selectedFile);
+      formData.append("id_token", idToken);
+      formData.append("description", this.description);
       // Adjust the URL based on your API endpoint for file upload
-      const apiUrl = process.env.VUE_APP_DDC_API + "tickets";
+      const apiUrl = process.env.VUE_APP_DDC_API + "tickets-line";
       const api_key = process.env.VUE_APP_API_KEY;
-
       axios
         .post(apiUrl, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             "x-api-key": api_key,
+            "Authorization" : idToken,
           },
         })
         .then((response) => {
