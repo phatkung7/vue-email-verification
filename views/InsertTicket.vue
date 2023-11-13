@@ -154,7 +154,6 @@ export default {
           headers: {
             "Content-Type": "multipart/form-data",
             "x-api-key": api_key,
-            "Authorization" : idToken,
           },
         })
         .then((response) => {
