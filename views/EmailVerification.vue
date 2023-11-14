@@ -62,7 +62,7 @@ import Swal from "sweetalert2";
 import liff from "@line/liff";
 const DDC_API = process.env.VUE_APP_DDC_API;
 const DDC_API_KEY = process.env.VUE_APP_API_KEY;
-const LIFF_ID = process.env.VUE_APP_LIFF_ID;
+const LIFF_ID = process.env.VUE_APP_LIFF_ID_REG;
 const AGREEMENT_URL = process.env.VUE_APP_AGREEMENT_URL;
 export default {
   data() {
