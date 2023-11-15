@@ -143,9 +143,9 @@ export default {
           // For simplicity, let's log the data for now
           // console.log("Description:", this.description);
           // console.log("System Type ID:", this.selectedSystemType); // Use this for the system type ID
-          const selectedSystemType = this.systemTypes.find(
-            (system) => system.value === this.selectedSystemType
-          );
+          // const selectedSystemType = this.systemTypes.find(
+          //   (system) => system.value === this.selectedSystemType
+          // );
           // console.log(
           //   "System Type Name:",
           //   selectedSystemType ? selectedSystemType.text : ""
