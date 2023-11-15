@@ -121,7 +121,7 @@ export default {
             "x-api-key": api_key,
           },
         });
-        console.log(response);
+        //console.log(response);
         this.systemTypes = response.data.data;
         // Preselect the first option
         if (this.systemTypes.length > 0) {
@@ -135,21 +135,21 @@ export default {
       this.isLoading = true; // Set loading state to true
       //init Line Liff
       const idToken = await liff.getIDToken();
-          console.log('--------- idToken -----------');
-          console.log(idToken);
-          console.log('-----------------------------');
+          // console.log('--------- idToken -----------');
+          // console.log(idToken);
+          // console.log('-----------------------------');
       try{
           // Implement logic to insert the ticket
           // For simplicity, let's log the data for now
-          console.log("Description:", this.description);
-          console.log("System Type ID:", this.selectedSystemType); // Use this for the system type ID
+          // console.log("Description:", this.description);
+          // console.log("System Type ID:", this.selectedSystemType); // Use this for the system type ID
           const selectedSystemType = this.systemTypes.find(
             (system) => system.value === this.selectedSystemType
           );
-          console.log(
-            "System Type Name:",
-            selectedSystemType ? selectedSystemType.text : ""
-          );
+          // console.log(
+          //   "System Type Name:",
+          //   selectedSystemType ? selectedSystemType.text : ""
+          // );
           // You can perform an API call or other logic here to insert the ticket
           const formData = new FormData();
           formData.append("systemTypeId", this.selectedSystemType);
@@ -159,7 +159,7 @@ export default {
           // Adjust the URL based on your API endpoint for file upload
           const apiUrl = process.env.VUE_APP_DDC_API + "tickets-line";
           const api_key = process.env.VUE_APP_API_KEY;
-          console.log(apiUrl);
+          //console.log(apiUrl);
           const create_ticket = await axios
             .post(apiUrl, formData, {
               headers: {
@@ -168,7 +168,7 @@ export default {
               },
             });
             if (create_ticket.data.ticketNumber) {
-                console.log("Ticket inserted successfully:", create_ticket.data.ticketNumber);
+                //console.log("Ticket inserted successfully:", create_ticket.data.ticketNumber);
                 Swal.fire({
                   icon: "success",
                   title: "สำเร็จ!",

@@ -63,7 +63,7 @@ import Swal from "sweetalert2";
 const LINE_HOOK_REGISTER_OTP = process.env.VUE_APP_LINE_HOOK_REGISTER_OTP;
 const DDC_API = process.env.VUE_APP_DDC_API;
 const DDC_API_KEY = process.env.VUE_APP_API_KEY;
-const LIFF_ID = process.env.VUE_APP_LIFF_ID;
+const LIFF_ID = process.env.VUE_APP_LIFF_ID_REG;
 export default {
   props: ["email"],
   data() {
@@ -169,8 +169,8 @@ export default {
           });
         }
       } catch (error) {
-        console.log(error);
-        console.log(error.response.data.message);
+        //console.log(error);
+        //console.log(error.response.data.message);
         Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด",
@@ -203,9 +203,9 @@ export default {
             }
           )
           .then(async (response) => {
-            console.log("-------- response verify-otp------");
-                  console.log(response);
-            if (response.data.status == "success") {
+            //console.log("-------- response verify-otp------");
+                  //console.log(response.data);
+            if (response.data.status === "success") {
               // Check if response.data.data exists and has at least one element
               if (response.data.data && response.data.data.length > 0) {
                 // Post Data To SubmitUser
@@ -215,10 +215,10 @@ export default {
                     email: response.data.data[0].email,
                     otp: response.data.data[0].otp_code,
                   };
-                  // console.log("-------- Verify OK ------");
+                   //console.log("-------- Verify OK ------");
                   // console.log(requestData);
                   await this.SubmitUser(requestData);
-                  //console.log("SubmitUser success");
+                  //.log("SubmitUser success");
                 } catch (error) {
                   //console.error("SubmitUser error:", error);
                 }

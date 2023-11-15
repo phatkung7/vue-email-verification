@@ -140,7 +140,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด",
-          text: error.response.data.error,
+          text: error.response.data.error ? error.response.data.error : error.response.data.message,
           confirmButtonText: "ตกลง",
           footer:
             "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>หรือผ่านทางช่องแชท <font color='green'><b>@ddc.helpdesk</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
