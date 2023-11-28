@@ -31,6 +31,9 @@
                   />
                 </div>
               </div>
+              <div class="mt-3 text-center">
+                <label for="otpMsg" class="form-label text-danger">***กรุณาอย่าปิดหน้าต่างนี้ ขณะรอ OTP Code &#128241;</label>
+              </div>
               <!-- Loading Spinner -->
               <div v-if="isLoading" class="text-center mt-4">
                 <div class="spinner-border text-primary" role="status">
