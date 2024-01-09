@@ -4,7 +4,9 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <h2 class="card-title text-center mb-4">OTP Verification</h2>
+            <h2 class="card-title text-center mb-4">
+              OTP Verification {{ appName }}
+            </h2>
             <form @submit.prevent="submitOTP" ref="otpForm">
               <div class="mb-3 text-center">
                 <label for="otp" class="form-label"
@@ -32,7 +34,9 @@
                 </div>
               </div>
               <div class="mt-3 text-center">
-                <label for="otpMsg" class="form-label text-danger">***กรุณาอย่าปิดหน้าต่างนี้ ขณะรอ OTP Code &#128241;</label>
+                <label for="otpMsg" class="form-label text-danger"
+                  >***กรุณาอย่าปิดหน้าต่างนี้ ขณะรอ OTP Code &#128241;</label
+                >
               </div>
               <!-- Loading Spinner -->
               <div v-if="isLoading" class="text-center mt-4">
@@ -75,6 +79,7 @@ export default {
       termsText: "",
       otpArray: ["", "", "", "", "", ""],
       isLoading: false, // New property to track loading state
+      appName: process.env.VUE_APP_NAME_CATE,
     };
   },
   computed: {
@@ -207,7 +212,7 @@ export default {
           )
           .then(async (response) => {
             //console.log("-------- response verify-otp------");
-                  //console.log(response.data);
+            //console.log(response.data);
             if (response.data.status === "success") {
               // Check if response.data.data exists and has at least one element
               if (response.data.data && response.data.data.length > 0) {
@@ -218,7 +223,7 @@ export default {
                     email: response.data.data[0].email,
                     otp: response.data.data[0].otp_code,
                   };
-                   //console.log("-------- Verify OK ------");
+                  //console.log("-------- Verify OK ------");
                   // console.log(requestData);
                   await this.SubmitUser(requestData);
                   //.log("SubmitUser success");
