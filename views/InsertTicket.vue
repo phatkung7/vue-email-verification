@@ -101,7 +101,7 @@ export default {
   async mounted() {
     // Fetch categories and system types when the component is mounted
     await this.fetchSystemTypes();
-    await this.checkLiffLogin();
+    //await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
