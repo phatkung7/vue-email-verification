@@ -6,7 +6,7 @@
           <div class="card-body">
             <h2 class="card-title text-center mb-4">
               การลงทะเบียนใช้งาน
-              <p>{{ process.env.VUE_APP_NAME_CATE }}</p>
+              <p>{{ appName }}</p>
             </h2>
             <form @submit.prevent="submitEmail">
               <div class="mb-3">
@@ -71,6 +71,7 @@ export default {
       termsText: "", // New data property for terms and conditions text
       termsLink: AGREEMENT_URL,
       isLoading: false, // New property to track loading state
+      appName: process.env.VUE_APP_NAME_CATE,
     };
   },
   beforeCreate() {
