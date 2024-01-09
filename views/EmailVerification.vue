@@ -6,7 +6,7 @@
           <div class="card-body">
             <h2 class="card-title text-center mb-4">
               การลงทะเบียนใช้งาน
-              <p>LINE DDC-Helpdesk</p>
+              <p>{{ process.env.VUE_APP_NAME_CATE }}</p>
             </h2>
             <form @submit.prevent="submitEmail">
               <div class="mb-3">
@@ -140,7 +140,9 @@ export default {
         Swal.fire({
           icon: "error",
           title: "เกิดข้อผิดพลาด",
-          text: error.response.data.error ? error.response.data.error : error.response.data.message,
+          text: error.response.data.error
+            ? error.response.data.error
+            : error.response.data.message,
           confirmButtonText: "ตกลง",
           footer:
             "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>หรือผ่านทางช่องแชท <font color='green'><b>@ddc.helpdesk</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
