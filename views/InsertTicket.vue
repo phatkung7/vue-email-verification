@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import liff from '@line/liff';
+import liff from "@line/liff";
 import axios from "axios";
 import Swal from "sweetalert2";
 const LIFF_ID = process.env.VUE_APP_LIFF_ID_TICKET;
@@ -101,7 +101,7 @@ export default {
   async mounted() {
     // Fetch categories and system types when the component is mounted
     await this.fetchSystemTypes();
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
@@ -135,61 +135,60 @@ export default {
       this.isLoading = true; // Set loading state to true
       //init Line Liff
       const idToken = await liff.getIDToken();
-          // console.log('--------- idToken -----------');
-          // console.log(idToken);
-          // console.log('-----------------------------');
-      try{
-          // Implement logic to insert the ticket
-          // For simplicity, let's log the data for now
-          // console.log("Description:", this.description);
-          // console.log("System Type ID:", this.selectedSystemType); // Use this for the system type ID
-          // const selectedSystemType = this.systemTypes.find(
-          //   (system) => system.value === this.selectedSystemType
-          // );
-          // console.log(
-          //   "System Type Name:",
-          //   selectedSystemType ? selectedSystemType.text : ""
-          // );
-          // You can perform an API call or other logic here to insert the ticket
-          const formData = new FormData();
-          formData.append("systemTypeId", this.selectedSystemType);
-          formData.append("files", this.selectedFile);
-          formData.append("idToken", idToken);
-          formData.append("description", this.description);
-          // Adjust the URL based on your API endpoint for file upload
-          const apiUrl = process.env.VUE_APP_DDC_API + "tickets-line";
-          const api_key = process.env.VUE_APP_API_KEY;
-          //console.log(apiUrl);
-          const create_ticket = await axios
-            .post(apiUrl, formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                "x-api-key": api_key,
-              },
-            });
-            if (create_ticket.data.ticketNumber) {
-                //console.log("Ticket inserted successfully:", create_ticket.data.ticketNumber);
-                Swal.fire({
-                  icon: "success",
-                  title: "สำเร็จ!",
-                  text: create_ticket.data.message,
-                  confirmButtonText: "ตกลง",
-                }).then( async (result) => {
-                      if (result.isConfirmed) {
-                        // Reload the page
-                        //location.reload();
-                        await liff.sendMessages([
-                              {
-                                type: "text",
-                                text: "ติดตาม-"+create_ticket.data.ticketNumber,
-                              },
-                            ]);
-                            await liff.closeWindow();
-                      }
-                    });
-            } else {
-              console.error("Error inserting ticket");
+      // console.log('--------- idToken -----------');
+      // console.log(idToken);
+      // console.log('-----------------------------');
+      try {
+        // Implement logic to insert the ticket
+        // For simplicity, let's log the data for now
+        // console.log("Description:", this.description);
+        // console.log("System Type ID:", this.selectedSystemType); // Use this for the system type ID
+        // const selectedSystemType = this.systemTypes.find(
+        //   (system) => system.value === this.selectedSystemType
+        // );
+        // console.log(
+        //   "System Type Name:",
+        //   selectedSystemType ? selectedSystemType.text : ""
+        // );
+        // You can perform an API call or other logic here to insert the ticket
+        const formData = new FormData();
+        formData.append("systemTypeId", this.selectedSystemType);
+        formData.append("files", this.selectedFile);
+        formData.append("idToken", idToken);
+        formData.append("description", this.description);
+        // Adjust the URL based on your API endpoint for file upload
+        const apiUrl = process.env.VUE_APP_DDC_API + "tickets-line";
+        const api_key = process.env.VUE_APP_API_KEY;
+        //console.log(apiUrl);
+        const create_ticket = await axios.post(apiUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-api-key": api_key,
+          },
+        });
+        if (create_ticket.data.ticketNumber) {
+          //console.log("Ticket inserted successfully:", create_ticket.data.ticketNumber);
+          Swal.fire({
+            icon: "success",
+            title: "สำเร็จ!",
+            text: create_ticket.data.message,
+            confirmButtonText: "ตกลง",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              // Reload the page
+              //location.reload();
+              await liff.sendMessages([
+                {
+                  type: "text",
+                  text: "ติดตาม-" + create_ticket.data.ticketNumber,
+                },
+              ]);
+              await liff.closeWindow();
             }
+          });
+        } else {
+          console.error("Error inserting ticket");
+        }
       } catch (error) {
         console.error("Error posting data:", error);
         Swal.fire({
@@ -199,7 +198,7 @@ export default {
           confirmButtonText: "ตกลง",
           footer:
             "กรุณาติดต่อ <font color='green'><b>02-590-3928</b></font><br>หรือผ่านทางช่องแชท <font color='green'><b>@ddc.helpdesk</b></font><br>กลุ่มพัฒนาระบบสารสนเทศและนวัตกรรมดิจิทัล<br>กองดิจิทัลเพื่อการควบคุมโรค",
-        })
+        });
       } finally {
         this.isLoading = false; // Set loading state to false after completion
       }
