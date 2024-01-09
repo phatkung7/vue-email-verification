@@ -78,7 +78,7 @@ export default {
     liff.init({ liffId: LIFF_ID }, function () {});
   },
   async mounted() {
-    //await this.checkLiffLogin();
+    await this.checkLiffLogin();
   },
   methods: {
     async checkLiffLogin() {
